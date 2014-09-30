@@ -32,7 +32,9 @@ module ActionDispatch
         end
 
         def set_session(env, sid, session_data, options = {})
-          return false if session_data.empty? || (session_data.size == 1 && session_data['_csrf_token'])
+          if options[:skip_empty_sessions]
+            return false if session_data.empty? || (session_data.size == 1 && session_data['_csrf_token'])
+          end
 
           id, record = get_session_record(env, sid)
           record.data = pack(session_data)
